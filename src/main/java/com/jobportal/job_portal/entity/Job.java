@@ -1,5 +1,7 @@
 package com.jobportal.job_portal.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -36,6 +38,11 @@ public class Job {
     @ManyToOne
     @JoinColumn(name="recruiter_id", nullable=false)
     private User recruiter;
+
+    public LocalDateTime getAppliedAt() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAppliedAt'");
+    }
 
 
 
