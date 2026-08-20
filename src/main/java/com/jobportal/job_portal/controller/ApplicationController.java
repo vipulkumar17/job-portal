@@ -2,17 +2,27 @@ package com.jobportal.job_portal.controller;
 
 import com.jobportal.job_portal.dto.ApplicationRequest;
 import com.jobportal.job_portal.dto.StatusUpdateRequest;
+import com.jobportal.job_portal.repoistry.ApplicationRepository;
 import com.jobportal.job_portal.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequestMapping("/api/applications")
 public class ApplicationController {
 
+    private final ApplicationRepository applicationRepository;
     @Autowired
     private ApplicationService applicationService;
+
+    ApplicationController(ApplicationRepository applicationRepository) {
+        this.applicationRepository = applicationRepository;
+    }
 
     @PostMapping
     public ResponseEntity<?> apply(@RequestBody ApplicationRequest request) {
@@ -41,4 +51,17 @@ public class ApplicationController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
+    @PostMapping("/{id}/resume")
+    public ResponseEntity<?> uploadaResume(@PathVariable Long id, @RequestParam("file") MultipartFile file){
+        try{
+            return ResponseEntity.ok(applicationService.uploadResume(id,file));
+        }catch(RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+
+        }
+    }
+
+  
+    
+    
 }

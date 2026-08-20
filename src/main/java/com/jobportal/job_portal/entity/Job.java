@@ -39,10 +39,7 @@ public class Job {
     @JoinColumn(name="recruiter_id", nullable=false)
     private User recruiter;
 
-    public LocalDateTime getAppliedAt() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAppliedAt'");
-    }
+    
 
 
 

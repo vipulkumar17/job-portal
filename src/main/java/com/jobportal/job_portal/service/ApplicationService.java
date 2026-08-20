@@ -9,12 +9,16 @@ import com.jobportal.job_portal.repoistry.UserRepository;
 import com.jobportal.job_portal.repoistry.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ApplicationService {
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -24,6 +28,18 @@ public class ApplicationService {
 
     @Autowired
     private JobRepository jobRepository;
+
+
+    public ApplicationResponse uploadResume(Long applicationId,MultipartFile file ){
+        Application application=applicationRepository.findById(applicationId)
+        .orElseThrow(()-> new RuntimeException("application not found")); 
+
+        String storedFilename=fileStorageService.storeFile(file);
+
+        application.setResume(storedFilename);
+        Application updated=applicationRepository.save(application);
+        return new ApplicationResponse(updated);
+    } 
 
     public ApplicationResponse apply(ApplicationRequest request) {
         User user = userRepository.findById(request.getUserId())
