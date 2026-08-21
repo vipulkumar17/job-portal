@@ -26,11 +26,9 @@ public class ApplicationController {
 
     @PostMapping
     public ResponseEntity<?> apply(@RequestBody ApplicationRequest request) {
-        try {
+       
             return ResponseEntity.ok(applicationService.apply(request));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        
     }
 
     @GetMapping("/user/{userId}")
@@ -45,20 +43,15 @@ public class ApplicationController {
 
     @PutMapping("/{id}/status")  // note the extra path segment /status — distinguishes this from a full resource update
     public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request) {
-        try {
+       
             return ResponseEntity.ok(applicationService.updateStatus(id, request));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+        
     }
     @PostMapping("/{id}/resume")
     public ResponseEntity<?> uploadaResume(@PathVariable Long id, @RequestParam("file") MultipartFile file){
-        try{
+        
             return ResponseEntity.ok(applicationService.uploadResume(id,file));
-        }catch(RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-
-        }
+       
     }
 
   

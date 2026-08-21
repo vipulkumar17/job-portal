@@ -3,6 +3,8 @@ package com.jobportal.job_portal.service;
 import com.jobportal.job_portal.dto.*;
 import com.jobportal.job_portal.entity.Application;
 import com.jobportal.job_portal.entity.User;
+import com.jobportal.job_portal.exception.DuplicateResourceException;
+import com.jobportal.job_portal.exception.ResourceNotFoundException;
 import com.jobportal.job_portal.entity.Job;
 import com.jobportal.job_portal.repoistry.ApplicationRepository;
 import com.jobportal.job_portal.repoistry.UserRepository;
@@ -32,7 +34,7 @@ public class ApplicationService {
 
     public ApplicationResponse uploadResume(Long applicationId,MultipartFile file ){
         Application application=applicationRepository.findById(applicationId)
-        .orElseThrow(()-> new RuntimeException("application not found")); 
+        .orElseThrow(()-> new ResourceNotFoundException("application not found")); 
 
         String storedFilename=fileStorageService.storeFile(file);
 
@@ -43,14 +45,14 @@ public class ApplicationService {
 
     public ApplicationResponse apply(ApplicationRequest request) {
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Job job = jobRepository.findById(request.getJobId())
-                .orElseThrow(() -> new RuntimeException("Job not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
 
         applicationRepository.findByUserIdAndJobId(request.getUserId(), request.getJobId())
                 .ifPresent(existing -> {
-                    throw new RuntimeException("You have already applied to this job");
+                    throw new DuplicateResourceException("You have already applied to this job");
                 });
 
         Application application = new Application();
@@ -78,7 +80,7 @@ public class ApplicationService {
 
     public ApplicationResponse updateStatus(Long id, StatusUpdateRequest request) {
         Application application = applicationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Application not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
 
         application.setStatus(request.getStatus());
         Application updated = applicationRepository.save(application);

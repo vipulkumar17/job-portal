@@ -15,24 +15,19 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request){
-        try{
+       
             return ResponseEntity.ok(userService.register(request));
 
 
         
-    }catch (RuntimeException e){
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+    
     
 }
 @PostMapping("/login")
 public ResponseEntity<?> login(@RequestBody LoginRequest request){
-    try{
+   
         return ResponseEntity.ok(userService.login(request));
-    }catch (RuntimeException e){
-        return ResponseEntity.status(401).body(e.getMessage());
-
-}
+    
 }
 }
 
