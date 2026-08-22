@@ -6,6 +6,7 @@ import com.jobportal.job_portal.exception.DuplicateResourceException;
 import com.jobportal.job_portal.exception.ResourceNotFoundException;
 import com.jobportal.job_portal.repoistry.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public AuthResponse register(RegisterRequest request){
         if (userRepository.existsByEmail(request.getEmail())){
             throw new DuplicateResourceException("email already registered");
@@ -21,7 +25,10 @@ public class UserService {
         User user =new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
+        
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
         user.setRole(request.getRole());
 
         User saved=userRepository.save(user);
@@ -31,7 +38,7 @@ public class UserService {
         User user =userRepository.findByEmail(request.getEmail())
         .orElseThrow(()->new ResourceNotFoundException("invalid email or password"));
 
-        if(!user.getPassword().equals(request.getPassword())){
+        if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
             throw new RuntimeException("invalid email or password");
         }
 
