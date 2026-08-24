@@ -8,6 +8,7 @@ import com.jobportal.job_portal.repoistry.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.jobportal.job_portal.security.JwtUtil;
 
 @Service
 public class UserService {
@@ -17,6 +18,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public AuthResponse register(RegisterRequest request){
         if (userRepository.existsByEmail(request.getEmail())){
@@ -42,7 +46,9 @@ public class UserService {
             throw new RuntimeException("invalid email or password");
         }
 
-        return new AuthResponse(user);
+        String token=jwtUtil.generateToken(user.getEmail(),user.getRole().name());
+
+        return new AuthResponse(user,token);
         
 
     }

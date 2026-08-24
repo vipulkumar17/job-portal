@@ -10,12 +10,17 @@ public class AuthResponse {
     private String name;
     private String email;
     private User.Role role;
+    private String token;
 
     public AuthResponse(User user){
         this.id= user.getId();
         this.name=user.getName();
         this.email=user.getEmail();
         this.role=user.getRole();
+    }
+    public AuthResponse(User user , String token){
+        this(user);
+        this.token=token;
     }
     
 }
