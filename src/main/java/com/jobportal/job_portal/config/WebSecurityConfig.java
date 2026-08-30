@@ -32,7 +32,7 @@ public class WebSecurityConfig {
 
             .requestMatchers("/api/auth/**").permitAll()
 
-            .anyRequest().permitAll()
+            .anyRequest().authenticated()
         )
          .sessionManagement(session->session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
