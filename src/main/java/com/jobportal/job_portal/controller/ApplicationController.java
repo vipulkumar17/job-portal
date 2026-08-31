@@ -6,6 +6,7 @@ import com.jobportal.job_portal.repoistry.ApplicationRepository;
 import com.jobportal.job_portal.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ public class ApplicationController {
     ApplicationController(ApplicationRepository applicationRepository) {
         this.applicationRepository = applicationRepository;
     }
-
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     public ResponseEntity<?> apply(@RequestBody ApplicationRequest request) {
        
@@ -40,7 +41,7 @@ public class ApplicationController {
     public ResponseEntity<?> getApplicationsByJob(@PathVariable Long jobId) {
         return ResponseEntity.ok(applicationService.getApplicationByJobId(jobId));
     }
-
+    @PreAuthorize("hasRole('RECRUITER')")
     @PutMapping("/{id}/status")  // note the extra path segment /status — distinguishes this from a full resource update
     public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request) {
        

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +30,9 @@ import org.springframework.data.domain.Pageable;
 public class JobController {
     @Autowired
     private JobService jobService;
+
+    @PreAuthorize("hasRole('RECRUITER')")
+
 
     @PostMapping
     public ResponseEntity<?> createJob(@RequestBody JobRequest request){
@@ -70,6 +74,7 @@ public class JobController {
        
 
     }
+    @PreAuthorize("hasRole('RECRUITER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteJob(@PathVariable Long id){
         
