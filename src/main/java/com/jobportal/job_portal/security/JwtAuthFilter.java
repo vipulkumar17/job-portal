@@ -41,6 +41,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String email = jwtUtil.extractEmail(token);
             String role = jwtUtil.extractRole(token);
 
+           
+
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 if (jwtUtil.isTokenValid(token, email)) {
@@ -53,9 +55,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                             );
 
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                   
                 }
             }
         } catch (Exception e) {
+            
             // invalid/expired token — request just proceeds unauthenticated
         }
 
